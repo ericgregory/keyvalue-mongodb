@@ -21,8 +21,8 @@ func validateMongoConfig(config map[string]string, name string) (MongoConfigArgs
 	if name == "" {
 		return configArgs, errors.New("no config name found")
 	} else {
-		globalConfigName = name
-		log.Printf("Using configuration from link: %s", globalConfigName)
+		configArgs.Name = name
+		globalLinkName = name
 	}
 
 	// Get URI from target link config
@@ -31,7 +31,7 @@ func validateMongoConfig(config map[string]string, name string) (MongoConfigArgs
 	} else {
 		configArgs.URI = uri
 		globalUri = configArgs.URI
-		log.Printf("Using MongoDB URI configuration from link: %s. (Consider using a secret for sensitive configuration values.)", globalConfigName)
+		log.Printf("Using MongoDB URI configuration from link: %s. (Consider using a secret for sensitive configuration values.)", globalLinkName)
 	}
 
 	// Get database from target link config
@@ -40,7 +40,7 @@ func validateMongoConfig(config map[string]string, name string) (MongoConfigArgs
 	} else {
 		configArgs.Database = database
 		globalDb = configArgs.Database
-		log.Printf("Using MongoDB database configuration from link: %s. (Consider using a secret for sensitive configuration values.)", globalConfigName)
+		log.Printf("Using MongoDB database configuration from link: %s. (Consider using a secret for sensitive configuration values.)", globalLinkName)
 	}
 
 	// Get optional key-value group value from target link config
@@ -50,7 +50,7 @@ func validateMongoConfig(config map[string]string, name string) (MongoConfigArgs
 	} else {
 		configArgs.KV = kv
 		globalKv = configArgs.KV
-		log.Printf("Using custom key-value group configuration from link: %s", globalConfigName)
+		log.Printf("Using custom key-value group configuration from link: %s", globalLinkName)
 	}
 
 	return configArgs, nil

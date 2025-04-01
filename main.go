@@ -4,7 +4,6 @@
 package main
 
 import (
-	"io"
 	"log"
 	"os"
 	"os/signal"
@@ -18,27 +17,26 @@ import (
 
 // Global variables to hold config
 var (
-	globalConfigName string = ""
-	globalUri        string = ""
-	globalDb         string = ""
-	globalKv         string = "kv"
+	globalLinkName string = ""
+	globalUri      string = ""
+	globalDb       string = ""
+	globalKv       string = "kv"
 )
 
 func main() {
-	if err := run(os.Stdin); err != nil {
+	if err := run(); err != nil {
 		log.Fatal(err)
 	}
 }
 
-func run(source io.Reader) error {
+func run() error {
 	p := &Provider{
 		sourceLinks: make(map[string]provider.InterfaceLinkDefinition),
 		targetLinks: make(map[string]provider.InterfaceLinkDefinition),
 		tracer:      otel.Tracer("keyvalue-mongodb"),
 	}
 
-	wasmcloudprovider, err := provider.NewWithHostDataSource(
-		source,
+	wasmcloudprovider, err := provider.New(
 		provider.SourceLinkPut(p.handleNewSourceLink),
 		provider.TargetLinkPut(p.handleNewTargetLink),
 		provider.SourceLinkDel(p.handleDelSourceLink),
@@ -65,18 +63,6 @@ func run(source io.Reader) error {
 		err := wasmcloudprovider.Start()
 		providerCh <- err
 	}()
-
-	// Initialize with config from link
-	repeat := true
-	for repeat {
-		if globalUri == "" {
-			p.handleNewTargetLink(provider.InterfaceLinkDefinition{})
-			log.Printf("Using %s", globalConfigName)
-		} else {
-			repeat = false
-			log.Printf("After initialization uri is %s", globalUri)
-		}
-	}
 
 	// Shutdown on SIGINT
 	signal.Notify(signalCh, syscall.SIGINT)
@@ -107,8 +93,7 @@ func (p *Provider) handleNewTargetLink(link provider.InterfaceLinkDefinition) er
 		log.Println("Invalid MongoDB target config", "error", err)
 		return err
 	}
-	log.Printf("At handlenewtarget, using URI config %s\n", mongoConfigArgs.URI)
-	// TODO other configs
+	log.Printf("Using configuration from link: %s\n", mongoConfigArgs.Name)
 	return nil
 }
 

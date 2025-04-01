@@ -7,11 +7,11 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"mongodb/bindings/testing/wrpc/keyvalue/store"
 	"slices"
 	"strings"
 	"testing"
 	"time"
-	"mongodb/bindings/testing/wrpc/keyvalue/store"
 
 	"github.com/nats-io/nats.go"
 	"go.wasmcloud.dev/provider"
@@ -27,8 +27,7 @@ func TestSet(t *testing.T) {
 		log.Fatal(err)
 	}
 	go func() {
-		hostDataSource, _ := env.HostDataSource()
-		if err := run(hostDataSource); err != nil {
+		if err := run(); err != nil {
 			log.Fatal(err)
 		}
 	}()
@@ -65,8 +64,7 @@ func TestGet(t *testing.T) {
 		log.Fatal(err)
 	}
 	go func() {
-		hostDataSource, _ := env.HostDataSource()
-		if err := run(hostDataSource); err != nil {
+		if err := run(); err != nil {
 			log.Fatal(err)
 		}
 	}()
@@ -119,8 +117,7 @@ func TestExists(t *testing.T) {
 		log.Fatal(err)
 	}
 	go func() {
-		hostDataSource, _ := env.HostDataSource()
-		if err := run(hostDataSource); err != nil {
+		if err := run(); err != nil {
 			log.Fatal(err)
 		}
 	}()
@@ -189,8 +186,7 @@ func TestDelete(t *testing.T) {
 		log.Fatal(err)
 	}
 	go func() {
-		hostDataSource, _ := env.HostDataSource()
-		if err := run(hostDataSource); err != nil {
+		if err := run(); err != nil {
 			log.Fatal(err)
 		}
 	}()
@@ -272,8 +268,7 @@ func TestListKeys(t *testing.T) {
 		log.Fatal(err)
 	}
 	go func() {
-		hostDataSource, _ := env.HostDataSource()
-		if err := run(hostDataSource); err != nil {
+		if err := run(); err != nil {
 			log.Fatal(err)
 		}
 	}()

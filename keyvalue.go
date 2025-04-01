@@ -46,7 +46,7 @@ func (p *Provider) Delete(ctx context.Context, bucket string, key string) (*wrpc
 	_, span := p.tracer.Start(ctx, "Delete")
 	defer span.End()
 
-	log.Printf("At delete step, using config %s\n", globalConfigName)
+	log.Printf("At delete step, using config %s\n", globalLinkName)
 	serverAPI := options.ServerAPI(options.ServerAPIVersion1)
 	opts := options.Client().ApplyURI(globalUri).SetServerAPIOptions(serverAPI)
 	client, err := mongo.Connect(opts)
@@ -74,7 +74,7 @@ func (p *Provider) Get(ctx context.Context, bucket string, key string) (*wrpc.Re
 	_, span := p.tracer.Start(ctx, "Get")
 	defer span.End()
 
-	log.Printf("At Get step, using config %s\n", globalConfigName)
+	log.Printf("At Get step, using config %s\n", globalLinkName)
 	// Use the SetServerAPIOptions() method to set the version of the Stable API on the client
 	serverAPI := options.ServerAPI(options.ServerAPIVersion1)
 	opts := options.Client().ApplyURI(globalUri).SetServerAPIOptions(serverAPI)
